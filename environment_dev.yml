@@ -1,0 +1,9 @@
+name: wetland-redox-workbench
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - myst-parser
+  - sphinx
+  - sphinx-book-theme
+  - pip
