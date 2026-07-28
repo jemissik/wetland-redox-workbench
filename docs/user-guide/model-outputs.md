@@ -383,6 +383,3 @@ print(oxygen_near_10cm["levdcmp"].item())
    `CH4FLUX_ALQUIMIA`, `ZWT`, and `soil_O2` before calculating derived results.
 6. Preserve the run namelists, source version, and input paths with the results
    so the run can be reproduced.
-
-See {doc}`../reference/output-variables` for the growing reference of
-ELM-Wet-Redox-specific history variables.

@@ -6,11 +6,11 @@ case, run the model, and find the first outputs to check.
 ```{toctree}
 :maxdepth: 2
 
-model-setup
+model-overview
 input-files
-configuration
+site-input-generation
 reaction-network-configuration
+launch-tools
 running-the-model
 model-outputs
-boa-results
 ```

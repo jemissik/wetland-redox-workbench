@@ -50,10 +50,6 @@ and rejects gaps, duplicate timestamps, and missing values. Water level is in
 meters relative to the soil surface, positive upward. Commands and input
 requirements are documented in {doc}`site-input-generation`.
 
-See {doc}`../technical/wetland-boundary-forcing` for the current NetCDF
-structure, model behavior, and limitations of the wetland boundary forcing
-features.
-
 ## Parameter Files
 
 ELM NetCDF parameter files contain model and PFT parameters. They are not
