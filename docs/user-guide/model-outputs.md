@@ -343,7 +343,6 @@ run_dir = "path/to/run/directory"
 
 with open_case_history(
     run_dir,
-    case_name="your_case_name",
     variables=["GPP", "CH4FLUX_ALQUIMIA", "soil_O2"],
 ) as history:
     history = normalize_history_time(history, position="start")
