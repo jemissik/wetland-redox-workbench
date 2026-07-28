@@ -8,7 +8,7 @@ modeling with ELM, PFLOTRAN, and Alquimia.
 The documentation is built with Sphinx and MyST Markdown.
 
 ```bash
-conda env create -f environment_dev.yml
+conda env create -f environment_docs.yml
 conda activate wetland-redox-workbench
 make docs
 ```
