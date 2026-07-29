@@ -146,7 +146,7 @@ The converter:
 - accepts meters or millimeters;
 - drops February 29 by default;
 - requires a complete regular no-leap period;
-- rejects duplicate times, gaps, and missing water-level values; and
+- rejects duplicate times, gaps, and missing forcing values; and
 - records the source CSV, units, site coordinates, and forcing period.
 
 Water level is in meters relative to the soil surface, with positive values
@@ -159,6 +159,53 @@ ncdump -h "$SITE_WORK/inputs/wetland_boundary_forcing_US-LA2.nc"
 ncks -H -C -v start_year,end_year,time_resolution_days,water_level \
   "$SITE_WORK/inputs/wetland_boundary_forcing_US-LA2.nc" | head -n 35
 ```
+
+### Optional: Add Salinity And DOM1
+
+The same converter can add `bc_salinity` and `bc_DOM1` to the forcing file.
+The provided example uses the LA2 water-level series with synthetic constant
+salinity and DOC values:
+
+```bash
+cp \
+  "$SITE_TOOLS/templates/site-inputs/US-LA2-water-salinity-dom1-example-1850.csv" \
+  "$SITE_WORK/wetland-boundary-solute-example.csv"
+
+python "$SITE_TOOLS/scripts/create_wetland_forcing.py" \
+  --csv "$SITE_WORK/wetland-boundary-solute-example.csv" \
+  --time-column time \
+  --water-level-column water_level_m \
+  --water-level-units m \
+  --salinity-column salinity_ppt \
+  --salinity-units ppt \
+  --dom1-column doc_mg_c_l \
+  --dom1-units mg-C/L \
+  --site-name US-LA2 \
+  --lat 29.8587 \
+  --lon 269.7131 \
+  --output "$SITE_WORK/inputs/wetland_boundary_forcing_US-LA2-solute-example.nc"
+
+ncks -H -C -v water_level,bc_salinity,bc_DOM1 \
+  "$SITE_WORK/inputs/wetland_boundary_forcing_US-LA2-solute-example.nc" \
+  | head -n 35
+```
+
+The model expects salinity in `ppt` and DOM1 in `mol/m3 H2O`. The converter can
+map a DOC column in `mg-C/L` or `g-C/m3` to DOM1 using one mole of carbon per
+mole of DOM1. Treating all measured DOC as the model's reactive DOM1 pool is a
+modeling assumption; review the reaction network and DOM1 C:N ratio before
+using that mapping scientifically.
+
+The extra variables are ignored unless the run also enables wetland solute
+forcing and the corresponding salinity or DOM1 controls in its ELM namelist:
+
+```fortran
+use_wetland_solute_forcing = .true.
+wetland_solute_force_salinity = .true.
+wetland_solute_force_dom1 = .true.
+```
+
+The default workshop run remains water-level-only.
 
 ## Choose An ELM Parameter File
 

@@ -46,9 +46,11 @@ Wetland water level and optional solute boundary concentrations can be read
 from a separate time-varying forcing file.
 
 The CSV converter creates regular no-leap `water_level(time, gridcell)` files
-and rejects gaps, duplicate timestamps, and missing values. Water level is in
-meters relative to the soil surface, positive upward. Commands and input
-requirements are documented in {doc}`site-input-generation`.
+and can optionally add `bc_salinity(time, gridcell)` and
+`bc_DOM1(time, gridcell)`. It rejects gaps, duplicate timestamps, and missing
+values. Water level is in meters relative to the soil surface, positive
+upward. Commands, units, and the measured-DOC-to-DOM1 assumption are documented
+in {doc}`site-input-generation`.
 
 ## Parameter Files
 

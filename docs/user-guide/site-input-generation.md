@@ -10,7 +10,7 @@ user-supplied overrides are scientifically appropriate.
 | Product | Tool | Starting information |
 | --- | --- | --- |
 | Point domain and static wetland surface files | `create_point_site_inputs.py` | Site YAML plus global ELM domain and surface files |
-| Wetland water-level forcing | `create_wetland_forcing.py` | Complete regular CSV time series |
+| Wetland boundary forcing | `create_wetland_forcing.py` | Complete regular CSV time series with water level and optional salinity/DOM1 |
 | ELM parameter-file copy or one-parameter edit | `create_elm_parameter_file.py` | Tested ELM parameter NetCDF |
 
 
@@ -124,7 +124,7 @@ ncks -H -C \
   "$SITE_WORK/inputs/surfdata_NEW-SITE_wetland.nc"
 ```
 
-## Wetland Water-Level Forcing
+## Wetland Boundary Forcing
 
 Prepare a CSV with one timestamp and one water-level value per forcing
 interval:
@@ -160,6 +160,73 @@ input. Water-level input units may be `m` or `mm`.
 Confirm the observed reference datum, sign convention, time zone, timestamp
 position, gap-filling method, and treatment timing before converting a
 scientific dataset.
+
+### Optional Salinity And DOM1
+
+The same CSV and NetCDF file can include boundary-water salinity and the
+model's reactive DOM1 pool:
+
+```text
+time,water_level_m,salinity_ppt,doc_mg_c_l
+1850-01-01,0.10,5.0,10.0
+1850-01-02,0.12,5.0,10.0
+```
+
+Pass the optional column names and units:
+
+```bash
+python "$SITE_TOOLS/scripts/create_wetland_forcing.py" \
+  --csv "$SITE_WORK/wetland-boundary.csv" \
+  --time-column time \
+  --water-level-column water_level_m \
+  --water-level-units m \
+  --salinity-column salinity_ppt \
+  --salinity-units ppt \
+  --dom1-column doc_mg_c_l \
+  --dom1-units mg-C/L \
+  --site-name NEW-SITE \
+  --lat 00.0000 \
+  --lon -00.0000 \
+  --output "$SITE_WORK/inputs/wetland_boundary_forcing_NEW-SITE.nc"
+```
+
+This adds:
+
+```text
+bc_salinity(time, gridcell)   ppt
+bc_DOM1(time, gridcell)       mol/m3 H2O
+```
+
+DOM1 input may use `mol/m3`, `mmol/L`, `mg-C/L`, or `g-C/m3`. For carbon-mass
+units, the converter assumes one mole of carbon per mole of DOM1. It therefore
+converts `mg-C/L` and `g-C/m3` by dividing by
+`12.011 g C mol-1`.
+
+Mapping a measured DOC concentration entirely to DOM1 is a scientific
+assumption, not just a unit conversion. DOM1 is the model's reactive
+PFLOTRAN/Alquimia species and inherits the reaction properties and C:N ratio
+in the active model configuration. Confirm that this representation is
+appropriate before using measured total DOC as `--dom1-column`.
+
+A runnable synthetic example is provided at:
+
+```text
+templates/site-inputs/US-LA2-water-salinity-dom1-example-1850.csv
+```
+
+Its water-level series comes from the LA2 preparation example, while its
+constant 5-ppt salinity and 10-mg-C/L DOC values are demonstrations, not LA2
+observations.
+
+Writing `bc_salinity` or `bc_DOM1` does not enable solute forcing by itself.
+The run must also enable `use_wetland_solute_forcing` and the corresponding
+species controls in its ELM namelist, for example:
+
+```fortran
+use_wetland_solute_forcing = .true.
+wetland_solute_force_salinity = .true.
+wetland_solute_force_dom1 = .true.
+```
 
 ## ELM Parameter File
 
