@@ -14,6 +14,7 @@ participant-ready {doc}`day1-guide`.
 
 day1-guide
 day1-create-site-inputs
+day2-guide
 site-data-checklist
 ```
 
@@ -30,4 +31,5 @@ Participants should leave able to:
 - Create draft point-site domain, surface, and wetland-forcing files.
 - Submit and monitor jobs on Slurm.
 - Analyze model output with Python.
+- Compare model results with observations and launch a small BOA experiment.
 - Understand how to adapt the LA2 workflow to a new site.
