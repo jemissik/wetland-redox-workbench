@@ -14,3 +14,6 @@ conda:
 sphinx:
   builder: html
   configuration: docs/conf.py
+
+# Build all downloadable formats
+formats: all
