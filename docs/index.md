@@ -16,3 +16,10 @@ user-guide/index
 
 workshop/2026-07/index
 ```
+
+```{toctree}
+:maxdepth: 2
+:caption: Technical
+
+technical/index
+```
