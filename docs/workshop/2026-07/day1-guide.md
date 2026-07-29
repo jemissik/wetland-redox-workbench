@@ -309,6 +309,11 @@ anything, inspect the resolved cases, inputs, and restart handoffs:
   --config "$HOME/elm-workshop/workflows/la2-full.yaml"
 ```
 
+The workshop template intentionally leaves `paths.executable_root` unset.
+During AD preparation, the workflow builds `e3sm.exe` once beneath the
+participant's writable `run_root`. Final spinup and transient preparation then
+reuse that personal build.
+
 To create only the AD-spinup case for inspection:
 
 ```bash
@@ -336,10 +341,10 @@ durations, walltimes, and scientific configuration have been reviewed:
 
 For a new site, start from the same YAML and replace the site name and
 site-specific input paths with the files created in the
-[point-site input exercise](day1-create-site-inputs.md). The shared executable
-can be reused while the model source and compile-time configuration remain
-compatible. Creating the case is a useful Day 1 checkpoint even when the long
-spinup will continue after the workshop.
+[point-site input exercise](day1-create-site-inputs.md). AD preparation
+compiles the selected `model_root` once, and the later stages reuse that
+workflow's build. Creating the case is a useful Day 1 checkpoint even when the
+long spinup will continue after the workshop.
 
 See the general [run-workflow guide](../../user-guide/running-the-model.md) for
 all commands, stage settings, monitoring, and failure behavior.

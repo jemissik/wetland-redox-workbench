@@ -1,0 +1,98 @@
+version: 1
+
+# Copy this file to a writable project directory and choose a descriptive,
+# unique case_prefix before preparing or submitting the workflow.
+workflow:
+  case_prefix: la2_full_example
+  site_name: US-LA2
+
+paths:
+  # model_root selects the source tree. It may be read-only because build
+  # output is written beneath run_root. For personal source changes, point this
+  # to the writable checkout.
+  model_root: /fs/ess/PAS0409/e3sm/software/elm-wet-redox-2026-07/sources/elm-wet-redox-b3784680
+  olmt_root: /fs/ess/PAS0409/e3sm/software/elm-wet-redox-2026-07/sources/OLMT-1559d98
+  inputdata: /fs/ess/PAS0409/e3sm/inputdata
+  case_root: ${HOME}/e3sm_cases
+  run_root: ${HOME}/e3sm_scratch
+  cime_template: /fs/ess/PAS0409/e3sm/software/elm-wet-redox-2026-07/cime-template/osc-cardinal-workshop-2026-07
+
+  # By default, AD preparation builds e3sm.exe once beneath the writable
+  # run_root, and the later stages reuse that personal build. Advanced users
+  # may instead specify a known-compatible writable build directory; CIME
+  # writes to EXEROOT during case setup.
+  # executable_root: /path/to/personal/compatible/bld
+
+inputs:
+  domain_file: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/domain_sparse_grids_US_LA2_Wetl_C3Gra_c220929.nc
+  surface_file: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/surfdata_sparse_grids_US_LA2_Wetl_C3Gra_c220929_static.nc
+  parameter_file: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/clm_params_cbgc_c07292018_Add_h2osfc_max_Forc.nc
+  wetland_forcing_file: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/wetland_boundary_forcing_US_LA2_generic_waterlevel.nc
+
+  alquimia:
+    ad_spinup: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/CTC_alquimia_forELM_O2consuming_adspinup.in
+    normal: /fs/ess/PAS0409/e3sm/project-data/workshop-2026-07/US-LA2/CTC_alquimia_forELM_O2consuming.in
+
+  # Optional additions:
+  # namelist_file: /path/to/user_nl_elm_additions.txt
+  # landuse_file: /path/to/surfdata.pftdyn.nc
+
+model:
+  machine: osc-cardinal
+  project: PAS0409
+  name: ELM
+  compiler: gnu
+  mpilib: openmpi
+  pio_version: 2
+  resolution: ELM_USRDAT
+  spinup_compset: ICB1850CNRDCTCBC
+  transient_compset: ICB20TRCNRDCTCBC
+  tasks: 1
+  timestep_hours: 1.0
+  forcing: gswp3
+  nutrient_mode: cn
+  nofire: true
+  pft_dynamics: false
+  wetland_forcing_water_level_cap: -1.0
+
+  history_variables:
+    - GPP
+    - H2OSFC
+    - H2OSFC_WET
+    - ZWT
+    - CH4FLUX_ALQUIMIA
+    - chem_dt
+    - soil_pH
+    - soil_salinity
+    - soil_O2
+    - soil_sulfate
+    - soil_sulfide
+    - soil_MeC
+    - ALQRATE_MEC_FERM
+    - ALQRATE_MEC_METH
+
+# A stage is enabled by being present. Omit transient for a spinup-only
+# workflow. Empty mappings use the project defaults, but production durations
+# and checkpoint intervals should be chosen deliberately.
+stages:
+  ad_spinup:
+    years: 60
+    walltime: "06:00:00"
+    restart_every_years: 5
+    history_nhtfrq: 0
+    history_mfilt: 12
+
+  final_spinup:
+    years: 100
+    walltime: "16:00:00"
+    restart_every_years: 10
+    history_nhtfrq: 0
+    history_mfilt: 12
+
+  transient:
+    start_year: 1850
+    end_year: 2013
+    walltime: "24:00:00"
+    restart_every_years: 5
+    history_nhtfrq: -24
+    history_mfilt: 365
