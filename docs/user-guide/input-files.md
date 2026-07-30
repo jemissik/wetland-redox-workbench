@@ -72,7 +72,9 @@ format.
 ## Multiple Wetland Patches
 
 The current ELM-Wet-Redox development code has an initial
-two-patch implementation.
+two-patch implementation. The configuration controls are summarized below;
+see {doc}`multiple-wetland-patches` for run setup, patch-resolved history
+output, area weighting, restart compatibility, and current limitations.
 
 A multiple-patch setup does not require separate domain or surface files for
 each patch. The site still has one gridcell and one wetland landunit. The

@@ -8,6 +8,7 @@ case, run the model, and find the first outputs to check.
 
 model-overview
 input-files
+multiple-wetland-patches
 site-input-generation
 reaction-network-configuration
 launch-tools

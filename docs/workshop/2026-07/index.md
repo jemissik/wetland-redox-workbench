@@ -15,6 +15,8 @@ participant-ready {doc}`day1-guide`.
 day1-guide
 day1-create-site-inputs
 day2-guide
+day3-guide
+repositories-and-code-map
 site-data-checklist
 ```
 

@@ -165,6 +165,12 @@ variable with dimensions `(time, levdcmp, lndgrid)` is a vertical soil profile
 at every time and site. Do not average or select a soil layer until you know
 which scientific question the reduction represents.
 
+Multiple-patch runs can use vector history output to preserve separate patch
+values. The current vector tape uses PFT and column mapping variables and has
+an important distinction between PFT-native and column-native fields. See
+{doc}`multiple-wetland-patches` before selecting or area-weighting those
+positions.
+
 Static coordinates such as `ZSOI`, `DZSOI`, `WATSAT`, and `HKSAT` may be
 written only in the first file of a history sequence. This is normal; later
 files can contain the time-varying fields without repeating every static field.
@@ -196,8 +202,7 @@ universal. Always check a variable's `long_name`, `units`, dimensions, and
 | `ELAI` | Exposed one-sided leaf area index | `m2 m-2` | `time, lndgrid` |
 | `VCMAX25TOP` | Canopy-top Vcmax at 25 C | `umol CO2 m-2 s-1` | `time, lndgrid` |
 | `ZWT` | Water table depth | `m` | `time, lndgrid` |
-| `H2OSFC` | Surface water depth | `mm` | `time, lndgrid` |
-| `H2OSFC_WET` | Wetland surface water depth | `mm` | `time, lndgrid` |
+| `H2OSFC_WET` | Wetland surface water depth; use this variable for wetland-landunit runs | `mm` | `time, lndgrid` |
 | `H2OSOI` | Volumetric soil water | `mm3 mm-3` | `time, levgrnd, lndgrid` |
 | `TSOI` | Soil temperature | `K` | `time, levgrnd, lndgrid` |
 
@@ -213,11 +218,9 @@ universal. Always check a variable's `long_name`, `units`, dimensions, and
 | `CH4_ALQ_TRANSPORT_NET_vr` | Net methane transport tendency by soil layer | `gC m-3 s-1` | `time, levdcmp, lndgrid` |
 
 ```{warning}
-`FCH4` and `CH4FLUX_ALQUIMIA` are not aliases. `FCH4` is the surface flux from
-ELM's standard methane formulation and is commonly stored in `kgC m-2 s-1`.
-`CH4FLUX_ALQUIMIA` is the total flux from the coupled redox/Alquimia pathway
-and is stored in `gC m-2 s-1`. Select the variable associated with the methane
-formulation being evaluated, and always verify the units in the file.
+Use `CH4FLUX_ALQUIMIA` when analyzing methane flux from ELM-Wet-Redox. Do not
+use `FCH4`, which belongs to ELM's standard methane formulation and does not
+represent the coupled Alquimia methane flux.
 ```
 
 #### Soil Carbon And Chemistry Profiles
